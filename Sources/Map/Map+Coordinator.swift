@@ -167,10 +167,26 @@ extension Map {
             if let newSelectedItem = newView.selectedItem,
                let mapAnnotation = annotationContentByID[newSelectedItem] {
                 mapView.selectAnnotation(mapAnnotation.annotation, animated: false)
+                self.moveRegion(to: mapAnnotation.annotation)
             } else {
                 // No item is selected
                 mapView.selectedAnnotations = []
+                self.backToInitialRegion()
             }
+        }
+        
+        func moveRegion(to annotation: MKAnnotation) {
+            self.view?.coordinateRegion = MKCoordinateRegion(
+                center: annotation.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
+            )
+        }
+        
+        func backToInitialRegion() {
+            self.view?.coordinateRegion = MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 37.540744, longitude: 127.076451),
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            )
         }
         
         public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {

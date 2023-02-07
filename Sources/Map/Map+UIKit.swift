@@ -15,6 +15,18 @@ extension Map: UIViewRepresentable {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
 
+        let mapCamera = MKMapCamera()
+        mapCamera.centerCoordinate = CLLocationCoordinate2D(
+            latitude: 37.540744,
+            longitude: 127.076451
+        )
+        mapCamera.pitch = 0
+        mapCamera.altitude = 3000 // example altitude
+        mapCamera.heading = 20
+        
+        // set the camera property
+        mapView.camera = mapCamera
+        
         updateUIView(mapView, context: context)
         
         return mapView
@@ -32,10 +44,8 @@ extension Map: UIViewRepresentable {
         mapView.isRotateEnabled = true
         mapView.isPitchEnabled = true
         mapView.pointOfInterestFilter = .excludingAll
-        context.coordinator.update(mapView, from: self, context: context)
-
         mapView.camera.heading = 20
-        mapView.setCamera(mapView.camera, animated: true)
+        context.coordinator.update(mapView, from: self, context: context)
     }
 
 }
