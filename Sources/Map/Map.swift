@@ -13,10 +13,7 @@ public struct Map<AnnotationItems: RandomAccessCollection, OverlayItems: RandomA
 
     // MARK: Stored Properties
 
-    @State var coordinateRegion: MKCoordinateRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.540744, longitude: 127.076451),
-        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-    )
+    @Binding var coordinateRegion: MKCoordinateRegion
     @Binding var mapRect: MKMapRect
 
     let usesRegion: Bool
@@ -39,6 +36,7 @@ public struct Map<AnnotationItems: RandomAccessCollection, OverlayItems: RandomA
 extension Map {
 
     public init(
+        coordinateRegion: Binding<MKCoordinateRegion>,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItem: Binding<AnnotationItems.Element.ID?> = .constant(.none),
@@ -47,6 +45,7 @@ extension Map {
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
     ) {
         self.usesRegion = true
+        self._coordinateRegion = coordinateRegion
         self._mapRect = .constant(.init())
         if let userTrackingMode = userTrackingMode {
             self.usesUserTrackingMode = true
@@ -72,6 +71,7 @@ extension Map {
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
     ) {
         self.usesRegion = false
+        self._coordinateRegion = .constant(.init())
         self._mapRect = mapRect
         if let userTrackingMode = userTrackingMode {
             self.usesUserTrackingMode = true
@@ -98,6 +98,7 @@ extension Map {
 extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
 
     public init(
+        coordinateRegion: Binding<MKCoordinateRegion>,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
@@ -108,6 +109,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
     ) {
         self.init(
+            coordinateRegion: coordinateRegion,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
             selectedItem: .constant(.none),
@@ -149,6 +151,7 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
 extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
 
     public init(
+        coordinateRegion: Binding<MKCoordinateRegion>,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItem: Binding<AnnotationItems.Element.ID?>,
@@ -162,6 +165,7 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         }
     ) {
         self.init(
+            coordinateRegion: coordinateRegion,
             userTrackingMode: userTrackingMode,
             annotationItems: annotationItems,
             selectedItem: selectedItem,
@@ -206,6 +210,7 @@ extension Map
           OverlayItems == [IdentifiableObject<MKOverlay>] {
 
     public init(
+        coordinateRegion: Binding<MKCoordinateRegion>,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotations: [MKAnnotation] = [],
         selectedItem: Binding<AnnotationItems.Element.ID?>,
@@ -222,6 +227,7 @@ extension Map
         }
     ) {
         self.init(
+            coordinateRegion: coordinateRegion,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
             selectedItem: selectedItem,
