@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 25.04.22.
 //
 
-#if !os(watchOS)
-
 import MapKit
 import SwiftUI
 
@@ -19,11 +17,11 @@ public struct MapMultiPolyline: MapOverlay {
 
     private let lineWidth: CGFloat?
     private let strokeColor: Color?
-    private let nativeStrokeColor: NativeColor?
+    private let nativeStrokeColor: UIColor?
 
     // MARK: Initialization
 
-    public init(polylines: [MKPolyline], level: MKOverlayLevel? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(polylines: [MKPolyline], level: MKOverlayLevel? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = MKMultiPolyline(polylines)
         self.level = level
         self.lineWidth = lineWidth
@@ -31,7 +29,7 @@ public struct MapMultiPolyline: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    public init(multiPolyline: MKMultiPolyline, level: MKOverlayLevel? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(multiPolyline: MKMultiPolyline, level: MKOverlayLevel? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = multiPolyline
         self.level = level
         self.lineWidth = lineWidth
@@ -39,7 +37,6 @@ public struct MapMultiPolyline: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(polylines: [MKPolyline], level: MKOverlayLevel? = nil, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = MKMultiPolyline(polylines)
         self.level = level
@@ -48,7 +45,6 @@ public struct MapMultiPolyline: MapOverlay {
         self.nativeStrokeColor = nil
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(multiPolyline: MKMultiPolyline, level: MKOverlayLevel? = nil, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = multiPolyline
         self.level = level
@@ -67,7 +63,7 @@ public struct MapMultiPolyline: MapOverlay {
         if let lineWidth = lineWidth {
             renderer.lineWidth = lineWidth
         }
-        if let strokeColor = strokeColor, #available(iOS 14, macOS 11, tvOS 14, *) {
+        if let strokeColor = strokeColor {
             renderer.strokeColor = .init(strokeColor)
         } else if let strokeColor = nativeStrokeColor {
             renderer.strokeColor = strokeColor
@@ -77,5 +73,3 @@ public struct MapMultiPolyline: MapOverlay {
     }
 
 }
-
-#endif

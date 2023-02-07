@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 23.04.22.
 //
 
-#if !os(watchOS)
-
 import Foundation
 import MapKit
 
@@ -33,5 +31,3 @@ public struct RendererMapOverlay: MapOverlay {
     }
 
 }
-
-#endif

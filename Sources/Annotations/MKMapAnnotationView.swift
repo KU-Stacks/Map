@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 23.04.22.
 //
 
-#if !os(watchOS)
-
 import MapKit
 import SwiftUI
 
@@ -14,7 +12,7 @@ class MKMapAnnotationView<Content: View>: MKAnnotationView {
 
     // MARK: Stored Properties
     
-    private var controller: NativeHostingController<Content>?
+    private var controller: UIHostingController<Content>?
     private var selectedContent: Content?
     private var notSelectedContent: Content?
     private var viewMapAnnotation: ViewMapAnnotation<Content>?
@@ -32,7 +30,7 @@ class MKMapAnnotationView<Content: View>: MKAnnotationView {
             return
         }
         controller?.view.removeFromSuperview()
-        let controller = NativeHostingController(rootView: contentView)
+        let controller = UIHostingController(rootView: contentView)
         addSubview(controller.view)
         bounds.size = controller.preferredContentSize
         self.controller = controller
@@ -54,14 +52,10 @@ class MKMapAnnotationView<Content: View>: MKAnnotationView {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        #if canImport(UIKit)
         controller?.willMove(toParent: nil)
-        #endif
         controller?.view.removeFromSuperview()
         controller?.removeFromParent()
         controller = nil
     }
 
 }
-
-#endif

@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 26.04.22.
 //
 
-#if canImport(UIKit) && !os(watchOS)
-
 import SwiftUI
 import MapKit
 
@@ -76,5 +74,3 @@ extension MapScale: UIViewRepresentable {
     }
 
 }
-
-#endif

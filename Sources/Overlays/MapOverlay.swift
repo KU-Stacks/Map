@@ -8,8 +8,6 @@
 import Foundation
 import MapKit
 
-#if !os(watchOS)
-
 public protocol MapOverlay {
 
     // MARK: Properties
@@ -22,5 +20,3 @@ public protocol MapOverlay {
     func renderer(for mapView: MKMapView) -> MKOverlayRenderer
 
 }
-
-#endif

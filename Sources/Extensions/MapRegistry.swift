@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 26.04.22.
 //
 
-#if !os(watchOS)
-
 import MapKit
 import SwiftUI
 
@@ -53,5 +51,3 @@ enum MapRegistry {
     }
 
 }
-
-#endif

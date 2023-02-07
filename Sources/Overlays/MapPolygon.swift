@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 25.04.22.
 //
 
-#if !os(watchOS)
-
 import MapKit
 import SwiftUI
 
@@ -18,14 +16,14 @@ public struct MapPolygon: MapOverlay {
     public let level: MKOverlayLevel?
 
     private let fillColor: Color?
-    private let nativeFillColor: NativeColor?
+    private let nativeFillColor: UIColor?
     private let lineWidth: CGFloat?
     private let strokeColor: Color?
-    private let nativeStrokeColor: NativeColor?
+    private let nativeStrokeColor: UIColor?
 
     // MARK: Initialization
 
-    public init(coordinates: [CLLocationCoordinate2D], interiorPolygons: [MapPolygon]? = nil, level: MKOverlayLevel? = nil, fillColor: NativeColor? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(coordinates: [CLLocationCoordinate2D], interiorPolygons: [MapPolygon]? = nil, level: MKOverlayLevel? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = MKPolygon(coordinates: coordinates, count: coordinates.count, interiorPolygons: interiorPolygons?.compactMap { $0.overlay as? MKPolygon })
         self.level = level
         self.fillColor = nil
@@ -35,7 +33,7 @@ public struct MapPolygon: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    public init(points: [MKMapPoint], interiorPolygons: [MapPolygon]? = nil, level: MKOverlayLevel? = nil, fillColor: NativeColor? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(points: [MKMapPoint], interiorPolygons: [MapPolygon]? = nil, level: MKOverlayLevel? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = MKPolygon(points: points, count: points.count, interiorPolygons: interiorPolygons?.compactMap { $0.overlay as? MKPolygon })
         self.level = level
         self.fillColor = nil
@@ -45,7 +43,7 @@ public struct MapPolygon: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    public init(polygon: MKPolygon, level: MKOverlayLevel? = nil, fillColor: NativeColor? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(polygon: MKPolygon, level: MKOverlayLevel? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = polygon
         self.level = level
         self.fillColor = nil
@@ -66,7 +64,6 @@ public struct MapPolygon: MapOverlay {
         self.nativeStrokeColor = nil
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(points: [MKMapPoint], interiorPolygons: [MapPolygon]? = nil, level: MKOverlayLevel? = nil, fillColor: Color?, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = MKPolygon(points: points, count: points.count, interiorPolygons: interiorPolygons?.compactMap { $0.overlay as? MKPolygon })
         self.level = level
@@ -77,7 +74,6 @@ public struct MapPolygon: MapOverlay {
         self.nativeStrokeColor = nil
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(polygon: MKPolygon, level: MKOverlayLevel? = nil, fillColor: Color?, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = polygon
         self.level = level
@@ -95,7 +91,7 @@ public struct MapPolygon: MapOverlay {
             .map { MKPolygonRenderer(polygon: $0) }
             ?? MKPolygonRenderer(overlay: overlay)
 
-        if let fillColor = fillColor, #available(iOS 14, macOS 11, tvOS 14, *) {
+        if let fillColor = fillColor {
             renderer.fillColor = .init(fillColor)
         } else if let fillColor = nativeFillColor {
             renderer.fillColor = fillColor
@@ -103,7 +99,7 @@ public struct MapPolygon: MapOverlay {
         if let lineWidth = lineWidth {
             renderer.lineWidth = lineWidth
         }
-        if let strokeColor = strokeColor, #available(iOS 14, macOS 11, tvOS 14, *) {
+        if let strokeColor = strokeColor {
             renderer.strokeColor = .init(strokeColor)
         } else if let strokeColor = nativeStrokeColor {
             renderer.strokeColor = strokeColor
@@ -113,6 +109,3 @@ public struct MapPolygon: MapOverlay {
     }
 
 }
-
-
-#endif

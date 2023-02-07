@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 24.04.22.
 //
 
-#if !os(watchOS)
-
 public struct MapInteractionModes: OptionSet {
 
     // MARK: Static Properties
@@ -21,11 +19,7 @@ public struct MapInteractionModes: OptionSet {
     @available(tvOS, unavailable)
     public static let pitch = MapInteractionModes(rawValue: 1 << 3)
 
-    #if os(tvOS)
-    public static let all = MapInteractionModes(arrayLiteral: .pan, .zoom)
-    #else
     public static let all = MapInteractionModes(arrayLiteral: .pan, .zoom, .rotate, .pitch)
-    #endif
 
     // MARK: Stored Properties
 
@@ -38,5 +32,3 @@ public struct MapInteractionModes: OptionSet {
     }
 
 }
-
-#endif

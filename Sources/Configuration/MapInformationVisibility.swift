@@ -43,31 +43,13 @@ public struct MapInformationVisibility: OptionSet {
     public static let zoomControls = MapInformationVisibility(rawValue: 1 << 7)
 
     public static let `default`: MapInformationVisibility = {
-        #if os(watchOS)
-        return MapInformationVisibility(rawValue: 0)
-        #else
         return MapInformationVisibility(arrayLiteral: .buildings)
-        #endif
     }()
 
     public static let all: MapInformationVisibility = {
-        #if os(iOS)
-        return MapInformationVisibility(arrayLiteral: .buildings, .compass, .scale, .traffic, .userLocation)
-        #elseif os(macOS)
-        if #available(macOS 11, *) {
-            return MapInformationVisibility(arrayLiteral: .buildings, .compass, .scale, .traffic, .userLocation)
-        } else {
-            return MapInformationVisibility(arrayLiteral: .buildings, .compass, .scale, .userLocation)
-        }
-        #elseif os(tvOS)
-        return MapInformationVisibility(arrayLiteral: .buildings, .scale, .traffic, .userLocation)
-        #elseif os(watchOS)
-        if #available(watchOS 6.1, *) {
-            return MapInformationVisibility(arrayLiteral: .userHeading, .userLocation)
-        } else {
-            return MapInformationVisibility(rawValue: 0)
-        }
-        #endif
+        return MapInformationVisibility(
+            arrayLiteral: .buildings, .compass, .scale, .traffic, .userLocation
+        )
     }()
 
     // MARK: Stored Properties

@@ -6,12 +6,9 @@
 //
 
 
-#if !os(tvOS) && !os(watchOS)
-
 import SwiftUI
 import MapKit
 
-@available(macOS 11, *)
 public struct MapCompass {
 
     // MARK: Nested Types
@@ -54,9 +51,7 @@ public struct MapCompass {
 
 }
 
-#if canImport(UIKit)
 
-@available(macOS 11, *)
 extension MapCompass: UIViewRepresentable {
 
     public func makeUIView(context: Context) -> MKCompassButton {
@@ -74,26 +69,3 @@ extension MapCompass: UIViewRepresentable {
 
 }
 
-#elseif canImport(AppKit)
-
-@available(macOS 11, *)
-extension MapCompass: NSViewRepresentable {
-
-    public func makeNSView(context: Context) -> MKCompassButton {
-        let view = MKCompassButton(mapView: MapRegistry[key])
-        updateNSView(view, context: context)
-        return view
-    }
-
-    public func updateNSView(_ compassButton: MKCompassButton, context: Context) {
-        if let mapView = MapRegistry[key], mapView != compassButton.mapView {
-            compassButton.mapView = mapView
-        }
-        context.coordinator.update(compassButton, with: self, context: context)
-    }
-
-}
-
-#endif
-
-#endif

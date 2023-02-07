@@ -13,20 +13,16 @@ public struct Map<AnnotationItems: RandomAccessCollection, OverlayItems: RandomA
 
     // MARK: Stored Properties
 
-    @Binding var coordinateRegion: MKCoordinateRegion
+    @State var coordinateRegion: MKCoordinateRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 37.540744, longitude: 127.076451),
+        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+    )
     @Binding var mapRect: MKMapRect
 
     let usesRegion: Bool
 
-    let mapType: MKMapType
-    let pointOfInterestFilter: MKPointOfInterestFilter?
-
-    let informationVisibility: MapInformationVisibility
-    let interactionModes: MapInteractionModes
-
     let usesUserTrackingMode: Bool
 
-    @available(macOS 11, *)
     @Binding var userTrackingMode: MKUserTrackingMode
     @Binding var selectedItem: AnnotationItems.Element.ID?
 
@@ -43,11 +39,6 @@ public struct Map<AnnotationItems: RandomAccessCollection, OverlayItems: RandomA
 extension Map {
 
     public init(
-        coordinateRegion: Binding<MKCoordinateRegion>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItem: Binding<AnnotationItems.Element.ID?> = .constant(.none),
@@ -56,12 +47,7 @@ extension Map {
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
     ) {
         self.usesRegion = true
-        self._coordinateRegion = coordinateRegion
         self._mapRect = .constant(.init())
-        self.mapType = mapType
-        self.pointOfInterestFilter = pointOfInterestFilter
-        self.informationVisibility = informationVisibility
-        self.interactionModes = interactionModes
         if let userTrackingMode = userTrackingMode {
             self.usesUserTrackingMode = true
             self._userTrackingMode = userTrackingMode
@@ -78,10 +64,6 @@ extension Map {
 
     public init(
         mapRect: Binding<MKMapRect>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItem: Binding<AnnotationItems.Element.ID?> = .constant(.none),
@@ -90,12 +72,7 @@ extension Map {
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
     ) {
         self.usesRegion = false
-        self._coordinateRegion = .constant(.init())
         self._mapRect = mapRect
-        self.mapType = mapType
-        self.pointOfInterestFilter = pointOfInterestFilter
-        self.informationVisibility = informationVisibility
-        self.interactionModes = interactionModes
         if let userTrackingMode = userTrackingMode {
             self.usesUserTrackingMode = true
             self._userTrackingMode = userTrackingMode
@@ -121,11 +98,6 @@ extension Map {
 extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
 
     public init(
-        coordinateRegion: Binding<MKCoordinateRegion>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
@@ -136,11 +108,6 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
         @MapOverlayBuilder overlayContent: @escaping (OverlayItems.Element) -> MapOverlay
     ) {
         self.init(
-            coordinateRegion: coordinateRegion,
-            type: mapType,
-            pointOfInterestFilter: pointOfInterestFilter,
-            informationVisibility: informationVisibility,
-            interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
             selectedItem: .constant(.none),
@@ -152,10 +119,6 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
 
     public init(
         mapRect: Binding<MKMapRect>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
@@ -167,10 +130,6 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
     ) {
         self.init(
             mapRect: mapRect,
-            type: mapType,
-            pointOfInterestFilter: pointOfInterestFilter,
-            informationVisibility: informationVisibility,
-            interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
             annotationContent: { annotationContent($0.object) },
@@ -190,11 +149,6 @@ extension Map where AnnotationItems == [IdentifiableObject<MKAnnotation>] {
 extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
 
     public init(
-        coordinateRegion: Binding<MKCoordinateRegion>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         selectedItem: Binding<AnnotationItems.Element.ID?>,
@@ -208,11 +162,6 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
         }
     ) {
         self.init(
-            coordinateRegion: coordinateRegion,
-            type: mapType,
-            pointOfInterestFilter: pointOfInterestFilter,
-            informationVisibility: informationVisibility,
-            interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotationItems,
             selectedItem: selectedItem,
@@ -224,10 +173,6 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
 
     public init(
         mapRect: Binding<MKMapRect>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotationItems: AnnotationItems,
         @MapAnnotationBuilder annotationContent: @escaping (AnnotationItems.Element) -> MapAnnotation,
@@ -241,10 +186,6 @@ extension Map where OverlayItems == [IdentifiableObject<MKOverlay>] {
     ) {
         self.init(
             mapRect: mapRect,
-            type: mapType,
-            pointOfInterestFilter: pointOfInterestFilter,
-            informationVisibility: informationVisibility,
-            interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotationItems,
             annotationContent: annotationContent,
@@ -265,11 +206,6 @@ extension Map
           OverlayItems == [IdentifiableObject<MKOverlay>] {
 
     public init(
-        coordinateRegion: Binding<MKCoordinateRegion>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotations: [MKAnnotation] = [],
         selectedItem: Binding<AnnotationItems.Element.ID?>,
@@ -286,11 +222,6 @@ extension Map
         }
     ) {
         self.init(
-            coordinateRegion: coordinateRegion,
-            type: mapType,
-            pointOfInterestFilter: pointOfInterestFilter,
-            informationVisibility: informationVisibility,
-            interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
             selectedItem: selectedItem,
@@ -302,10 +233,6 @@ extension Map
 
     public init(
         mapRect: Binding<MKMapRect>,
-        type mapType: MKMapType = .standard,
-        pointOfInterestFilter: MKPointOfInterestFilter? = nil,
-        informationVisibility: MapInformationVisibility = .default,
-        interactionModes: MapInteractionModes = .all,
         userTrackingMode: Binding<MKUserTrackingMode>? = nil,
         annotations: [MKAnnotation] = [],
         @MapAnnotationBuilder annotationContent: @escaping (MKAnnotation) -> MapAnnotation = { annotation in
@@ -322,10 +249,6 @@ extension Map
     ) {
         self.init(
             mapRect: mapRect,
-            type: mapType,
-            pointOfInterestFilter: pointOfInterestFilter,
-            informationVisibility: informationVisibility,
-            interactionModes: interactionModes,
             userTrackingMode: userTrackingMode,
             annotationItems: annotations.map(IdentifiableObject.init),
             annotationContent: { annotationContent($0.object) },

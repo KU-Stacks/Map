@@ -7,18 +7,6 @@
 
 import MapKit
 
-#if canImport(WatchKit) && os(watchOS)
-
-import WatchKit
-
-public protocol MapAnnotation {
-
-    func addAnnotation(to map: WKInterfaceMap)
-
-}
-
-#else
-
 public protocol MapAnnotation {
 
     // MARK: Static Functions
@@ -42,5 +30,3 @@ extension MapAnnotation {
     }
 
 }
-
-#endif

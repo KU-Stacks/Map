@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 04.05.22.
 //
 
-#if !os(watchOS)
-
 import Foundation
 import MapKit
 import SwiftUI
@@ -33,5 +31,3 @@ extension View {
     }
 
 }
-
-#endif

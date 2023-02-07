@@ -1,10 +1,10 @@
-// swift-tools-version:5.1
+// swift-tools-version: 5.7
 
 import PackageDescription
 
 let package = Package(
     name: "Map",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v15)],
     products: [
         .library(name: "Map", targets: ["Map"]),
     ],

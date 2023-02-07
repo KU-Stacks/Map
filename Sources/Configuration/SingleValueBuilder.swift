@@ -7,9 +7,7 @@
 
 public typealias MapAnnotationBuilder = SingleValueBuilder<MapAnnotation>
 
-#if !os(watchOS)
 public typealias MapOverlayBuilder = SingleValueBuilder<MapOverlay>
-#endif
 
 @resultBuilder
 public enum SingleValueBuilder<Component> {

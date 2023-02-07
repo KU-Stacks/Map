@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 23.04.22.
 //
 
-#if !os(watchOS)
-
 import MapKit
 import SwiftUI
 
@@ -81,5 +79,3 @@ public struct ViewMapAnnotation<Content: View>: MapAnnotation {
     }
 
 }
-
-#endif

@@ -5,8 +5,6 @@
 //  Created by Paul Kraft on 25.04.22.
 //
 
-#if !os(watchOS)
-
 import MapKit
 import SwiftUI
 
@@ -18,14 +16,14 @@ public struct MapCircle: MapOverlay {
     public let level: MKOverlayLevel?
 
     private let fillColor: Color?
-    private let nativeFillColor: NativeColor?
+    private let nativeFillColor: UIColor?
     private let lineWidth: CGFloat?
     private let strokeColor: Color?
-    private let nativeStrokeColor: NativeColor?
+    private let nativeStrokeColor: UIColor?
 
     // MARK: Initialization
 
-    public init(center: CLLocationCoordinate2D, radius: CLLocationDistance, level: MKOverlayLevel? = nil, fillColor: NativeColor? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(center: CLLocationCoordinate2D, radius: CLLocationDistance, level: MKOverlayLevel? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = MKCircle(center: center, radius: radius)
         self.level = level
         self.fillColor = nil
@@ -35,7 +33,7 @@ public struct MapCircle: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    public init(mapRect: MKMapRect, level: MKOverlayLevel? = nil, fillColor: NativeColor? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(mapRect: MKMapRect, level: MKOverlayLevel? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = MKCircle(mapRect: mapRect)
         self.level = level
         self.fillColor = nil
@@ -45,7 +43,7 @@ public struct MapCircle: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    public init(circle: MKCircle, level: MKOverlayLevel? = nil, fillColor: NativeColor? = nil, lineWidth: CGFloat? = nil, strokeColor: NativeColor? = nil) {
+    public init(circle: MKCircle, level: MKOverlayLevel? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, strokeColor: UIColor? = nil) {
         self.overlay = circle
         self.level = level
         self.fillColor = nil
@@ -55,7 +53,6 @@ public struct MapCircle: MapOverlay {
         self.nativeStrokeColor = strokeColor
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(center: CLLocationCoordinate2D, radius: CLLocationDistance, level: MKOverlayLevel? = nil, fillColor: Color?, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = MKCircle(center: center, radius: radius)
         self.level = level
@@ -66,7 +63,6 @@ public struct MapCircle: MapOverlay {
         self.nativeStrokeColor = nil
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(mapRect: MKMapRect, level: MKOverlayLevel? = nil, fillColor: Color?, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = MKCircle(mapRect: mapRect)
         self.level = level
@@ -77,7 +73,6 @@ public struct MapCircle: MapOverlay {
         self.nativeStrokeColor = nil
     }
 
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(circle: MKCircle, level: MKOverlayLevel? = nil, fillColor: Color?, lineWidth: CGFloat? = nil, strokeColor: Color?) {
         self.overlay = circle
         self.level = level
@@ -95,7 +90,7 @@ public struct MapCircle: MapOverlay {
             .map { MKCircleRenderer(circle: $0) }
             ?? MKCircleRenderer(overlay: overlay)
 
-        if let fillColor = fillColor, #available(iOS 14, macOS 11, tvOS 14, *) {
+        if let fillColor = fillColor {
             renderer.fillColor = .init(fillColor)
         } else if let fillColor = nativeFillColor {
             renderer.fillColor = fillColor
@@ -103,7 +98,7 @@ public struct MapCircle: MapOverlay {
         if let lineWidth = lineWidth {
             renderer.lineWidth = lineWidth
         }
-        if let strokeColor = strokeColor, #available(iOS 14, macOS 11, tvOS 14, *) {
+        if let strokeColor = strokeColor {
             renderer.strokeColor = .init(strokeColor)
         } else if let strokeColor = nativeStrokeColor {
             renderer.strokeColor = strokeColor
@@ -113,5 +108,3 @@ public struct MapCircle: MapOverlay {
     }
 
 }
-
-#endif

@@ -8,38 +8,6 @@
 import MapKit
 import SwiftUI
 
-#if canImport(WatchKit) && os(watchOS)
-
-import WatchKit
-
-public struct MapPin {
-
-    // MARK: Stored Properties
-
-    private let coordinate: CLLocationCoordinate2D
-    private let color: WKInterfaceMapPinColor
-
-    // MARK: Initialization
-
-    public init(coordinate: CLLocationCoordinate2D, color: WKInterfaceMapPinColor) {
-        self.coordinate = coordinate
-        self.color = color
-    }
-
-}
-
-// MARK: - MapAnnotation
-
-extension MapPin: MapAnnotation {
-
-    public func addAnnotation(to map: WKInterfaceMap) {
-        map.addAnnotation(coordinate, with: color)
-    }
-
-}
-
-#else
-
 public struct MapPin {
 
     // MARK: Nested Types
@@ -66,13 +34,6 @@ public struct MapPin {
 
     // MARK: Initialization
 
-    public init(coordinate: CLLocationCoordinate2D) {
-        self.coordinate = coordinate
-        self.tint = nil
-        self.annotation = Annotation(coordinate)
-    }
-
-    @available(iOS 14, macOS 11, tvOS 14, *)
     public init(coordinate: CLLocationCoordinate2D, tint: Color?) {
         self.coordinate = coordinate
         self.tint = tint
@@ -94,12 +55,10 @@ extension MapPin: MapAnnotation {
     public func view(for mapView: MKMapView) -> MKAnnotationView? {
         let view = mapView.dequeueReusableAnnotationView(withIdentifier: Self.reuseIdentifier, for: annotation)
         view.annotation = annotation
-        if #available(iOS 14, macOS 11, tvOS 14, *), let tint = tint, let pin = view as? MKPinAnnotationView {
+        if let tint = tint, let pin = view as? MKPinAnnotationView {
             pin.pinTintColor = .init(tint)
         }
         return view
     }
 
 }
-
-#endif

@@ -8,8 +8,6 @@
 import MapKit
 import SwiftUI
 
-#if !os(watchOS)
-
 extension Map {
 
     // MARK: Nested Types
@@ -49,12 +47,8 @@ extension Map {
             updateAnnotations(on: mapView, from: view, to: newView)
             updateSelectedItem(on: mapView, from: view, to: newView)
             updateCamera(on: mapView, context: context, animated: animation != nil)
-            updateInformationVisibility(on: mapView, from: view, to: newView)
-            updateInteractionModes(on: mapView, from: view, to: newView)
             updateOverlays(on: mapView, from: view, to: newView)
-            updatePointOfInterestFilter(on: mapView, from: view, to: newView)
             updateRegion(on: mapView, from: view, to: newView, animated: animation != nil)
-            updateType(on: mapView, from: view, to: newView)
             updateUserTracking(on: mapView, from: view, to: newView)
 
             if let key = context.environment.mapKey {
@@ -124,38 +118,6 @@ extension Map {
             }
         }
 
-        private func updateInformationVisibility(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            guard previousView?.informationVisibility != newView.informationVisibility else {
-                return
-            }
-
-            mapView.showsBuildings = newView.informationVisibility.contains(.buildings)
-            #if !os(tvOS)
-            mapView.showsCompass = newView.informationVisibility.contains(.compass)
-            #endif
-            mapView.showsScale = newView.informationVisibility.contains(.scale)
-            mapView.showsTraffic = newView.informationVisibility.contains(.traffic)
-            mapView.showsUserLocation = newView.informationVisibility.contains(.userLocation)
-            #if !os(iOS) && !os(tvOS)
-            mapView.showsZoomControls = newView.informationVisibility.contains(.zoomControls)
-            if #available(macOS 11, *) {
-                mapView.showsPitchControl = newView.informationVisibility.contains(.pitchControl)
-            }
-            #endif
-        }
-
-        private func updateInteractionModes(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            guard previousView?.interactionModes != newView.interactionModes else {
-                return
-            }
-
-            mapView.isScrollEnabled = newView.interactionModes.contains(.pan)
-            mapView.isZoomEnabled = newView.interactionModes.contains(.zoom)
-            #if !os(tvOS)
-            mapView.isRotateEnabled = newView.interactionModes.contains(.rotate)
-            mapView.isPitchEnabled = newView.interactionModes.contains(.pitch)
-            #endif
-        }
 
         private func updateOverlays(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
             let changes: CollectionDifference<OverlayItems.Element>
@@ -210,12 +172,6 @@ extension Map {
                 mapView.selectedAnnotations = []
             }
         }
-
-        private func updatePointOfInterestFilter(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            if previousView?.pointOfInterestFilter != newView.pointOfInterestFilter {
-                mapView.pointOfInterestFilter = newView.pointOfInterestFilter
-            }
-        }
         
         public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             // Find the item ID of the selected annotation
@@ -255,19 +211,11 @@ extension Map {
                 }
             }
         }
-
-        private func updateType(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            if previousView?.mapType != newView.mapType {
-                mapView.mapType = newView.mapType
-            }
-        }
-
+        
         private func updateUserTracking(on mapView: MKMapView, from previousView: Map?, to newView: Map) {
-            if #available(macOS 11, *) {
-                let newTrackingMode = newView.userTrackingMode
-                if newView.usesUserTrackingMode, mapView.userTrackingMode != newTrackingMode {
-                    mapView.userTrackingMode = newTrackingMode
-                }
+            let newTrackingMode = newView.userTrackingMode
+            if newView.usesUserTrackingMode, mapView.userTrackingMode != newTrackingMode {
+                mapView.userTrackingMode = newTrackingMode
             }
         }
 
@@ -281,7 +229,6 @@ extension Map {
             view?.mapRect = mapView.visibleMapRect
         }
 
-        @available(macOS 11, *)
         public func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
             guard let view = view, view.usesUserTrackingMode else {
                 return
@@ -292,11 +239,7 @@ extension Map {
             case .follow:
                 view.userTrackingMode = .follow
             case .followWithHeading:
-                #if os(macOS) || os(tvOS)
-                view.userTrackingMode = .follow
-                #else
                 view.userTrackingMode = .followWithHeading
-                #endif
             @unknown default:
                 assertionFailure("Encountered unknown user tracking mode")
             }
@@ -339,5 +282,3 @@ extension Map {
     }
 
 }
-
-#endif
