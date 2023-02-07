@@ -15,7 +15,20 @@ extension Map: UIViewRepresentable {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
         
+        let mapCamera = MKMapCamera()
+        mapCamera.centerCoordinate = CLLocationCoordinate2D(
+            latitude: 37.540744,
+            longitude: 127.076451
+        )
+        mapCamera.pitch = 0
+        mapCamera.altitude = 3000 // example altitude
+        mapCamera.heading = 20
+        
+        // set the camera property
+        mapView.camera = mapCamera
+
         updateUIView(mapView, context: context)
+        
         return mapView
     }
 
