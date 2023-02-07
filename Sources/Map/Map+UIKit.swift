@@ -16,8 +16,6 @@ extension Map: UIViewRepresentable {
         mapView.delegate = context.coordinator
 
         updateUIView(mapView, context: context)
-        mapView.camera.pitch = 0
-        mapView.camera.altitude = 3000 // example altitude
         
         return mapView
     }
@@ -34,8 +32,10 @@ extension Map: UIViewRepresentable {
         mapView.isRotateEnabled = true
         mapView.isPitchEnabled = true
         mapView.pointOfInterestFilter = .excludingAll
-        mapView.camera.heading = 20
         context.coordinator.update(mapView, from: self, context: context)
+
+        mapView.camera.heading = 20
+        mapView.setCamera(mapView.camera, animated: true)
     }
 
 }
